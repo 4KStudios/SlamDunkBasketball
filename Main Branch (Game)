@@ -6,7 +6,11 @@ scoreP2: 0,
 function preload()
 {
   //images
-  //this.load.image('player1img', 'assets/player1img.png')
+  this.load.image('player1img', 'images/player1img.png'); //placeholder
+  this.load.image('player2img', 'images/player2img.png'); //placeholder
+  this.load.image('background', 'images/Newcourt.png');
+  this.load.image('ball', 'images/Basketball.png');
+  //this.load.image('NEWNAME', 'images/NAMEOFPNG')
   //We need player1img, player2img, background
 }
 
@@ -14,9 +18,12 @@ function create()
 {
   gameState.player1 = this.physics.add.sprite(250, 250, 'player1img');
   gameState.player2 = this.physics.add.sprite(100, 100, 'player2img');
+  gameState.ball = this.physics.add.sprite(200, 200, 'ball', .5);
+  gameState.ball.setScale(.2);
 
-//Inputing Letter Keys
+// Inputing Arrows
   gameState.cursors = this.input.keyboard.createCursorKeys();
+//Inputing Letter Keys
   gameState.cursors.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
   gameState.cursors.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
   gameState.cursors.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
@@ -25,9 +32,10 @@ function create()
   gameState.cursors.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
   gameState.cursors.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
   gameState.cursors.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-
+ 
 //Setting Background
-  const background = this.add.image(500, 300, 'background');
+  gameState.background = this.add.image(0, 0, 'background');
+
 }
 
 function update() {
@@ -37,24 +45,31 @@ function update() {
   } else if (gameState.cursors.keyD.isDown) {
     gameState.player1.setVelocityX(160);
   } else if(gameState.cursors.keyW.isDown){
-    gameState.player1.setVelocityY(160);
-  } else if(gameState.cursors.keyS.isDown) {
     gameState.player1.setVelocityY(-160);
+  } else if(gameState.cursors.keyS.isDown) {
+    gameState.player1.setVelocityY(160);
   } else {
-    gameState.player.setVelocityX(0);
+    gameState.player1.setVelocityX(0);
+    gameState.player1.setVelocityY(0);
   };
 
   //Player 2 Movement 
-  if (gameState.cursors.arrowKey.right.isDown) {
-    gameState.player1.setVelocityX(160);
-  } else if (gameState.cursors.arrowKey.left.isDown) {
-    gameState.player1.setVelocityX(160);
-  } else if(gameState.cursors.arrowKey.up.isDown){
-    gameState.player1.setVelocityY(160);
-  } else if(gameState.cursors.arrowKey.down.isDown)  {
-    gameState.player1.setVelocityY(-160);
+  if (gameState.cursors.right.isDown) {
+    gameState.player2.setVelocityX(160);
+  } else if (gameState.cursors.left.isDown) {
+    gameState.player2.setVelocityX(-160);
+  } else if(gameState.cursors.up.isDown){
+    gameState.player2.setVelocityY(-160);
+  } else if(gameState.cursors.down.isDown)  {
+    gameState.player2.setVelocityY(160);
+}   else {
+    gameState.player2.setVelocityX(0);
+    gameState.player2.setVelocityY(0);
 }
 }
+
+  
+
 
 //Phaser Library
 const config = 
@@ -72,7 +87,6 @@ const config =
   physics: {
   default: 'arcade',
   arcade: {
-    gravity: { y: 200 },
     enableBody: true,
   },
   }
