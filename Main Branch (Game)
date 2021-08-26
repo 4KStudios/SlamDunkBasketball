@@ -9,17 +9,28 @@ function preload()
   this.load.image('player1img', 'images/player1img.png'); //placeholder
   this.load.image('player2img', 'images/player2img.png'); //placeholder
   this.load.image('background', 'images/Newcourt.png');
-  this.load.image('ball', 'images/Basketball.png');
+  this.load.image('ball', 'images/Basketball2.png');
+  this.load.image('Walls', 'images/Walls.png');
+  this.load.image('hoop', 'images/hoop.png');
   //this.load.image('NEWNAME', 'images/NAMEOFPNG')
   //We need player1img, player2img, background
 }
 
 function create()
 {
+  //Setting Background
+  gameState.background = this.add.image(400, 250, 'background');
+  gameState.background.setScale(1.5)
+  gameState.backgroundColor = "rgba(0, 0, 0, 0.30)";
+
+  gameState.hoop = this.physics.add.sprite(400, 100, 'hoop')
+  gameState.hoop.setScale(.5)
+
+
   gameState.player1 = this.physics.add.sprite(250, 250, 'player1img');
   gameState.player2 = this.physics.add.sprite(100, 100, 'player2img');
   gameState.ball = this.physics.add.sprite(200, 200, 'ball', .5);
-  gameState.ball.setScale(.2);
+  gameState.ball.setScale(.075);
 
 // Inputing Arrows
   gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -32,10 +43,29 @@ function create()
   gameState.cursors.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
   gameState.cursors.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
   gameState.cursors.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
- 
-//Setting Background
-  gameState.background = this.add.image(0, 0, 'background');
 
+//Creating Group for Walls
+const wallL = this.physics.add.staticGroup();
+const wallR = this.physics.add.staticGroup();
+const wallBottom = this.physics.add.staticGroup();
+//Putting the walls into the game
+wallL.create(25, 450, 'Walls').setScale(1, 100).refreshBody();
+wallR.create(750, 450, 'Walls').setScale(1, 100).refreshBody();
+wallBottom.create(0, 500, 'Walls').setScale(200, 1).refreshBody();
+
+//Player and Wall Colliders
+this.physics.add.collider(gameState.player1, wallL);
+this.physics.add.collider(gameState.player2, wallL);
+this.physics.add.collider(gameState.player1, wallR);
+this.physics.add.collider(gameState.player2, wallR);
+this.physics.add.collider(gameState.player1, wallBottom);
+this.physics.add.collider(gameState.player2, wallBottom);
+this.physics.add.collider(gameState.player1, gameState.ball);
+this.physics.add.collider(gameState.player2, gameState.ball);
+this.physics.add.collider(gameState.ball, wallBottom);
+this.physics.add.collider(gameState.ball, wallL);
+this.physics.add.collider(gameState.ball, wallR);
+this.physics.add.collider(gameState.player1, gameState.player2);
 }
 
 function update() {
@@ -44,28 +74,34 @@ function update() {
     gameState.player1.setVelocityX(-160);
   } else if (gameState.cursors.keyD.isDown) {
     gameState.player1.setVelocityX(160);
-  } else if(gameState.cursors.keyW.isDown){
-    gameState.player1.setVelocityY(-160);
-  } else if(gameState.cursors.keyS.isDown) {
-    gameState.player1.setVelocityY(160);
   } else {
     gameState.player1.setVelocityX(0);
-    gameState.player1.setVelocityY(0);
   };
+
+  if (gameState.cursors.keyW.isDown) {
+    gameState.player1.setVelocityY(-160);
+  } else if (gameState.cursors.keyS.isDown){
+    gameState.player1.setVelocityY(160);
+  } else {
+    gameState.player1.setVelocityY(0);
+  }
 
   //Player 2 Movement 
   if (gameState.cursors.right.isDown) {
     gameState.player2.setVelocityX(160);
   } else if (gameState.cursors.left.isDown) {
     gameState.player2.setVelocityX(-160);
-  } else if(gameState.cursors.up.isDown){
-    gameState.player2.setVelocityY(-160);
-  } else if(gameState.cursors.down.isDown)  {
-    gameState.player2.setVelocityY(160);
-}   else {
+  }   else {
     gameState.player2.setVelocityX(0);
-    gameState.player2.setVelocityY(0);
 }
+
+ if (gameState.cursors.up.isDown) {
+    gameState.player2.setVelocityY(-160);
+  } else if (gameState.cursors.down.isDown){
+    gameState.player2.setVelocityY(160);
+  } else {
+    gameState.player2.setVelocityY(0);
+  }
 }
 
   
